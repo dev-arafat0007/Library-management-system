@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+{% extends "readerindex.html" %}
+
+{% block main_content %}
+<div style="display: flex; flex-direction: column; align-items: center; justify-contents: center;">
+    <div style="overflow-y: auto; height: 650px; margin-top:10px; width: 90%;">
+
+        {% if unreturned_books %}
+        <table class="table table-striped" style="width: 100%;">
+            <thead style="position: sticky; top: 0; z-index: 1; padding: 8px; font-size: 20px; font-weight: bolder; text-align: center;">
+            <tr>
+                <td style="background-color: #FE2E64; color: white;">Reader ID</td>
+                <td style="background-color: #FE2E64; color: white;">Reader email</td>
+                <td style="background-color: #FE2E64; color: white;">Reader Name</td>
+                <td style="background-color: #FE2E64; color: white;">Book ID</td>
+                <td style="background-color: #FE2E64; color: white;">Book Name</td>
+                <td style="background-color: #FE2E64; color: white;">Author's Name</td>
+                <td style="background-color: #FE2E64; color: white;">Issued Date</td>
+                <td style="background-color: #FE2E64; color: white;">Due Date</td>
+                <td style="background-color: #FE2E64; color: white;">Return Status</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for book in unreturned_books %}
+            <tr style="text-align: center">
+                <td class="bodycell">{{book.reader_id}}</td>
+                <td class="bodycell">{{book.reader_name}}</td>
+                <td class="bodycell">{{book.reader_email}}</td>
+                <td class="bodycell">{{book.bookid}}</td>
+                <td class="bodycell">{{book.bookname}}</td>
+                <td class="bodycell">{{book.author}}</td>
+                <td class="bodycell">{{book.issueddate}}</td>
+                <td class="bodycell">{{book.due_date}}</td>
+                <td class="bodycell">{{book.is_returned}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <h5 style="text-align: center; color: red; margin-top: 50px;">Warning!!!<br>You are highly requested to return
+            these Books as soon as possible with 100tk for each Book.
+            Otherwise, you will get punished according to the varsity rules.</h5>
+        {% else %}
+        <h4 style="text-align: center; margin-top: 10%;">No Defaulter Records found for your account.</h4>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
