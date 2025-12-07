@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+{% extends "index.html" %}
+
+{% block main_content %}
+
+
+<div>
+    <div style="display: flex; gap: 50px;margin-top:30px;">
+        <form action="" method="post"
+              style="width: 25%; margin-left: 3%;background-color: rgb(195, 241, 255);display: flex;flex-direction: column;align-items: center;justify-content: center;padding: 10px;">
+            {% csrf_token %}
+            <div class="form-floating mb-2">
+                <input type="text" class="form-control" id="readerid" name="readerid" placeholder="readerid">
+                <label for="readerid">Reader's ID</label>
+            </div>
+            <div class="form-floating mb-2">
+                <input type="text" class="form-control" id="readername" name="readername" placeholder="readername">
+                <label for="readername">Reader's Name</label>
+            </div>
+            <div class="form-floating mb-2">
+                <input type="email" class="form-control" id="readeremail" name="readeremail"
+                       placeholder="name@example.com">
+                <label for="readeremail">Reader's Email</label>
+            </div>
+            <select class="form-select" aria-label="Default select example" id="dept" name="dept"
+                    style="height: 60px; margin-bottom: 10px;">
+                <option selected>Select a Department</option>
+                <option value="CSE">CSE</option>
+                <option value="SWE">SWE</option>
+                <option value="MCT">MCT</option>
+                <option value="CE">CE</option>
+                <option value="TE">TE</option>
+                <option value="BA">BA</option>
+                <option value="ICE">ICE</option>
+                <option value="NFE">NFE</option>
+                <option value="LAW">LAW</option>
+                <option value="THM">THM</option>
+                <option value="EEE">EEE</option>
+                <option value="JMC">JMC</option>
+                <option value="DS">DS</option>
+                <option value="ARCH">ARCH</option>
+                <option value="RE">RE</option>
+                <option value="AS">AS</option>
+                <option value="ESDM">ESDM</option>
+                <option value="ISLM">ISLM</option>
+                <option value="CIS">CIS</option>
+                <option value="ITM">ITM</option>
+                <option value="PESS">PESS</option>
+                <option value="GEB">GEB</option>
+                <option value="FA">FA</option>
+                <option value="English">English</option>
+                <option value="Pharmacy">Pharmacy</option>
+                <option value="Marketing">Marketing</option>
+                <option value="Accounting">Accounting</option>
+            </select>
+            <div class="form-floating mb-2">
+                <input type="number" class="form-control" id="batch" name="batch" placeholder="batch">
+                <label for="batch">Batch</label>
+            </div>
+            <div class="form-floating mb-2">
+                <input type="text" class="form-control" id="contact" name="contact" placeholder="contact">
+                <label for="contact">Contact Number</label>
+            </div>
+            <div class="d-grid gap-2" style="width: 95%;">
+                <button class="btn btn-primary" type="submit">Add Reader</button>
+            </div>
+            <p style="text-align: center;margin-top: 50px; color: red">
+                ***Please Fill-Up These Fields With Proper Information.Avoid using duplicate <b>Reader ID</b>. Neither
+                It
+                Will Create Conflict In The Database.
+            </p>
+        </form>
+
+        <div style="width: 70%">
+            <div class="container-fluid" style="width: 80%">
+                <form class="d-flex" role="search" method="GET" action="/readers_list" style="height: 50px;">
+                    <input class="form-control me-2" type="search" name="search"
+                           placeholder="Search for Reader With Reader's ID"
+                           aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit"
+                            style="background-color: #0174DF; color: white; border: None; width: 15%;" >Search
+                    </button>
+                </form>
+            </div>
+            <div class="container" style="overflow-y: auto; height: 650px; margin-top:10px;">
+                {% if query %}
+                <p>Showing results for "{{ query }}":</p>
+                {% endif %}
+                <table class="table table-hover">
+                    <thead style="position: sticky; top: 0; z-index: 1; padding: 8px; font-size: 20px; font-weight: bolder; text-align: center;">
+                    <tr>
+                        <td style="background-color: #FE2E64; color: white;">Reader ID</td>
+                        <td style="background-color: #FE2E64; color: white;">Name</td>
+                        <td style="background-color: #FE2E64; color: white;">Email</td>
+                        <td style="background-color: #FE2E64; color: white;">Department</td>
+                        <td style="background-color: #FE2E64; color: white;">Batch</td>
+                        <td style="background-color: #FE2E64; color: white;">Contact</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for reader in my_reader%}
+                    <tr style="text-align: center">
+                        <td>{{reader.reader_id}}</td>
+                        <td>
+                            {% if reader.is_active %}
+                            <span class="btn btn-secondary">{{reader.reader_name}}</span>
+                            {% else %}
+                            <span class="btn btn-success">{{reader.reader_name}}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{reader.reader_email}}</td>
+                        <td>{{reader.reader_dept}}</td>
+                        <td>{{reader.reader_batch}}</td>
+                        <td>{{reader.reader_contact}}</td>
+                    </tr>
+                    {% endfor %}
+
+                    {% if readers.exists %}
+                    {% for reader in readers %}
+                    <tr style="text-align: center">
+                        <td>{{reader.reader_id}}</td>
+                        <td>
+                            {% if reader.is_active %}
+                            <span class="btn btn-secondary">{{reader.reader_name}}</span>
+                            {% else %}
+                            <span class="btn btn-success">{{reader.reader_name}}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{reader.reader_email}}</td>
+                        <td>{{reader.reader_dept}}</td>
+                        <td>{{reader.reader_batch}}</td>
+                        <td>{{reader.reader_contact}}</td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    {% if query %}
+                    <tr>
+                        <td colspan="6">No readers found for "{{ query }}".</td>
+                    </tr>
+                    {% endif %}
+                    {% endif %}
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% if messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for message in messages %}
+            Swal.fire({
+                icon: '{% if message.tags == "success" %}success{% else %}error{% endif %}',
+                title: '{% if message.tags == "success" %}Success{% else %}Error{% endif %}',
+                text: '{{ message }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
+
+{% endblock %}
