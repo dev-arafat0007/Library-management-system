@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+{% extends "index.html" %}
+
+{% block main_content %}
+<h1 style="text-align: center; margin: 20px 0px">Return Issued Books</h1>
+<div style="display: flex; gap: 50px;margin-top: 30px;">
+    <form action="" method="POST"
+          style="width: 25%; height: 400px; margin-left: 3%; background-color: rgb(195, 241, 255); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+        {% csrf_token %}
+
+         {% if messages %}
+            <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    {% for message in messages %}
+                        Swal.fire({
+                            icon: '{% if message.tags == "success" %}success{% else %}error{% endif %}',
+                            title: '{% if message.tags == "success" %}Success{% else %}Error{% endif %}',
+                            text: '{{ message }}',
+                            timer: 3000,
+                            showConfirmButton: false
+                        });
+                    {% endfor %}
+                });
+            </script>
+        {% endif %}
+
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="readerid" name="readerid" placeholder="Reader ID"
+                   oninput="fetchReaderInfo()">
+            <label for="readerid">Reader ID</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="bookid" name="bookid" placeholder="Book ID"
+                   oninput="fetchBookInfo()">
+            <label for="bookid">Book ID</label>
+        </div>
+        <div class="d-grid gap-2" style="width: 95%;">
+            <button class="btn btn-primary" type="submit">Receive Issued Book</button>
+        </div>
+        <p style="text-align: center; margin-top: 50px; color: red">
+            ***Please Check Everything Before Receiving the Book. Incorrect data may cause conflicts in the database.
+        </p>
+    </form>
+
+
+    <div class="container" style="overflow-y: auto; height: 650px;">
+        <table class="table table-striped">
+        <thead style="position: sticky; top: 0; z-index: 1; padding: 8px; font-size: 20px; font-weight: bolder; text-align: center;">
+        <tr>
+            <td style="background-color: #FE2E64; color: white;">Reader ID</td>
+            <td style="background-color: #FE2E64; color: white;">Reader Name</td>
+            <td style="background-color: #FE2E64; color: white;">Reader email</td>
+            <td style="background-color: #FE2E64; color: white;">Book ID</td>
+            <td style="background-color: #FE2E64; color: white;">Book Name</td>
+            <td style="background-color: #FE2E64; color: white;">Issued Date</td>
+            <td style="background-color: #FE2E64; color: white;">Due Date</td>
+            <td style="background-color: #FE2E64; color: white;">Return Status</td>
+        </tr>
+        </thead>
+        <tbody>
+        {% for details in issuedboookdetails%}
+        <tr style="text-align: center">
+            <td class="bodycell">{{details.reader_id}}</td>
+            <td class="bodycell">{{details.reader_name}}</td>
+            <td class="bodycell">{{details.reader_email}}</td>
+            <td class="bodycell">{{details.bookid}}</td>
+            <td class="bodycell">{{details.bookname}}</td>
+            <td class="bodycell">{{details.issueddate}}</td>
+            <td class="bodycell">{{details.due_date}}</td>
+            <td class="bodycell">{{details.is_returned}}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    </div>
+</div>
+{% endblock %}
