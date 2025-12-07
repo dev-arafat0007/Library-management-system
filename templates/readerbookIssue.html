@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+{% extends "readerindex.html" %}
+
+{% block main_content %}
+
+<div style="display: flex; flex-direction: column; align-items: center; justify-contents: center; gap: 20px;margin-top: 30px;">
+    <div style="overflow-y: auto; height: 650px; margin-top:10px; width: 90%;">
+        {% if issuedboookdetails %}
+        <table class="table table-striped">
+            <thead style="position: sticky; top: 0; z-index: 1; padding: 8px; font-size: 20px; font-weight: bolder; text-align: center;">
+            <tr>
+                <td style="background-color: #FE2E64; color: white;">Reader ID</td>
+                <td style="background-color: #FE2E64; color: white;">Reader Name</td>
+                <td style="background-color: #FE2E64; color: white;">Reader email</td>
+                <td style="background-color: #FE2E64; color: white;">Book ID</td>
+                <td style="background-color: #FE2E64; color: white;">Book Name</td>
+                <td style="background-color: #FE2E64; color: white;">Issued Date</td>
+                <td style="background-color: #FE2E64; color: white;">Due Date</td>
+                <td style="background-color: #FE2E64; color: white;">Return Status</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for details in issuedboookdetails%}
+            <tr>
+                <td class="bodycell">{{details.reader_id}}</td>
+                <td class="bodycell">{{details.reader_name}}</td>
+                <td class="bodycell">{{details.reader_email}}</td>
+                <td class="bodycell">{{details.bookid}}</td>
+                <td class="bodycell">{{details.bookname}}</td>
+                <td class="bodycell">{{details.issueddate}}</td>
+                <td class="bodycell">{{details.due_date}}</td>
+                <td class="bodycell">{{details.is_returned}}</td>
+            </tr>
+            {% endfor %}
+
+            {% if records.exists %}
+            {% for details in records %}
+            <tr>
+                <td class="bodycell">{{details.reader_id}}</td>
+                <td class="bodycell">{{details.reader_name}}</td>
+                <td class="bodycell">{{details.reader_email}}</td>
+                <td class="bodycell">{{details.bookid}}</td>
+                <td class="bodycell">{{details.bookname}}</td>
+                <td class="bodycell">{{details.issueddate}}</td>
+                <td class="bodycell">{{details.due_date}}</td>
+                <td class="bodycell">{{details.is_returned}}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            {% if query %}
+            <tr>
+                <td colspan="8">No records found for "{{ query }}".</td>
+            </tr>
+            {% endif %}
+            {% endif %}
+            </tbody>
+        </table>
+         <h5 style="text-align: center; color: red; margin-top: 50px;">
+            !!! Soft Reminder !!!<br>
+            *** Please Return These Books Before Exceeding The Due Date. Otherwise, This Will Cause Defaulter Issue and
+            You Will be Punished Along With Late-fee. ***
+        </h5>
+        {% else %}
+        <h5>Currently, You Don't Have Any Issued Books.</h5>
+        {% endif %}
+
+    </div>
+</div>
+
+{% if messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for message in messages %}
+            Swal.fire({
+                icon: '{% if message.tags == "success" %}success{% else %}error{% endif %}',
+                title: '{% if message.tags == "success" %}Success{% else %}Error{% endif %}',
+                text: '{{ message }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+{% endblock %}
