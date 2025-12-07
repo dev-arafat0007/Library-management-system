@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+{% extends "index.html" %}
+
+{% block main_content %}
+
+<div style="display: flex; gap: 50px;margin-top:30px;">
+    <form action="" method="post"
+          style="width: 25%; margin-left: 3%;background-color: rgb(195, 241, 255);display: flex;flex-direction: column;align-items: center;justify-content: center;padding: 10px;">
+        {% csrf_token %}
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="bookid" name="bookid" placeholder="name@example.com">
+            <label for="bookid">Book ID</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="bookname" name="bookname" placeholder="Password">
+            <label for="bookname">Book Name</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="author" name="author" placeholder="name@example.com">
+            <label for="author">Book's Author</label>
+        </div>
+        <select class="form-select" aria-label="Default select example" id="category" name="category"
+                style="height: 60px; margin-bottom: 10px;">
+            <option selected>Select a Category</option>
+            <option value="Science Fiction">Science Fiction</option>
+            <option value="Biographies">Biographies</option>
+            <option value="Literature">Literature</option>
+            <option value="Historical">Historical</option>
+            <option value="Text Books">Text Books</option>
+            <option value="Reference">Reference</option>
+            <option value="Religious">Religious</option>
+            <option value="Codding">Codding</option>
+            <option value="Comics">Comics</option>
+            <option value="Novel">Novel</option>
+            <option value="Poem">Poem</option>
+        </select>
+        <div class="form-floating mb-2">
+            <input type="number" class="form-control" id="quantity" name="quantity" placeholder="name@example.com">
+            <label for="quantity">Quantity</label>
+        </div>
+        <div class="d-grid gap-2" style="width: 95%;">
+            <button class="btn btn-primary" type="submit">Add Book</button>
+        </div>
+        <p style="text-align: center;margin-top: 50px; color: red">
+            ***Please Fill-Up These Fields With Proper Information.Avoid using duplicate <b>Book ID</b>. Neither It
+            Will
+            Create Conflict In The Database.
+        </p>
+    </form>
+
+    <div style="width: 70%">
+        <div class="container-fluid" style="width: 80%">
+            <form class="d-flex" role="search" method="GET" action="/books_list" style="height: 50px;">
+                <input class="form-control me-2" type="search" name="search"
+                       placeholder="Search for Book With Book's ID"
+                       aria-label="Search">
+                <button class="btn btn-outline-success" type="submit"
+                        style="background-color: #0174DF; color: white; border: None; width: 15%;">Search
+                </button>
+            </form>
+        </div>
+
+        <div class="container" style="overflow-y: auto; height: 650px; margin-top:10px;">
+            <table class="table table-striped">
+                <thead style="position: sticky; top: 0; z-index: 1; padding: 8px; font-size: 20px; font-weight: bolder; text-align: center;">
+                <tr>
+                    <td style="background-color: #FE2E64; color: white;">Book ID</td>
+                    <td style="background-color: #FE2E64; color: white;">Book Name</td>
+                    <td style="background-color: #FE2E64; color: white;">Book's Author</td>
+                    <td style="background-color: #FE2E64; color: white;">Category</td>
+                    <td style="background-color: #FE2E64; color: white;">Quantity</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for book in all_books %}
+                <tr style="text-align: center">
+                    <td>{{book.bookid}}</td>
+                    <td>{{book.bookname}}</td>
+                    <td>{{book.author}}</td>
+                    <td>{{book.category}}</td>
+                    <td>{{book.quantity}}</td>
+                </tr>
+                {% endfor %}
+
+                {% if books.exists %}
+                {% for book in books %}
+                <tr style="text-align: center">
+                    <td>{{book.bookid}}</td>
+                    <td>{{book.bookname}}</td>
+                    <td>{{book.author}}</td>
+                    <td>{{book.category}}</td>
+                    <td>{{book.quantity}}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                {% if query %}
+                <tr>
+                    <td colspan="5">No Books found for "{{ query }}".</td>
+                </tr>
+                {% endif %}
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+{% block scripts %}
+<script>
+    const lastBookId = "{{ last_book_id }}";
+    if (lastBookId) {
+        document.getElementById("bookid").value = parseInt(lastBookId) + 1;
+    }
+</script>
+{% endblock %}
+
+
+{% if messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for message in messages %}
+            Swal.fire({
+                icon: '{% if message.tags == "success" %}success{% else %}error{% endif %}',
+                title: '{% if message.tags == "success" %}Success{% else %}Error{% endif %}',
+                text: '{{ message }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
+
+{% endblock %}
