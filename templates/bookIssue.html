@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+{% extends "index.html" %}
+
+{% block main_content %}
+
+<div style="display: flex; gap: 50px;margin-top: 30px;">
+    <form action="" method="POST"
+          style="width: 25%; margin-left: 3%; background-color: rgb(195, 241, 255); display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px;">
+        {% csrf_token %}
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="readerid" name="readerid" placeholder="Reader ID"
+                   oninput="fetchReaderInfo()">
+            <label for="readerid">Reader ID</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="bookid" name="bookid" placeholder="Book ID"
+                   oninput="fetchBookInfo()">
+            <label for="bookid">Book ID</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="readername" name="readername" placeholder="Reader Name"
+                   readonly>
+            <label for="readername">Reader Name</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="email" name="email" placeholder="Email" readonly>
+            <label for="email">Email</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="bookname" name="bookname" placeholder="Book Name" readonly>
+            <label for="bookname">Book Name</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="text" class="form-control" id="author" name="author" placeholder="Author" readonly>
+            <label for="author">Author</label>
+        </div>
+        <div class="d-grid gap-2" style="width: 95%;">
+            <button class="btn btn-primary" type="submit">Issue Book</button>
+        </div>
+        <p style="text-align: center; margin-top: 50px; color: red">
+            ***Please Check Everything Before Issuing the Book. Incorrect data may cause conflicts in the database.
+        </p>
+    </form>
+
+    <div style="width: 85%">
+        <div class="container-fluid" style="width: 80%">
+            <form class="d-flex" role="search" method="GET" action="/issuedbooks_list" style="height: 50px;">
+                <input class="form-control me-2" type="search" name="issuedbooksearch"
+                       placeholder="Search for Reader's Issued Books With Reader's ID"
+                       aria-label="Search">
+                <button class="btn btn-outline-success" type="submit"
+                        style="background-color: #0174DF; color: white; border: None; width: 15%;">Search
+                </button>
+            </form>
+        </div>
+        <div class="container" style="overflow-y: auto; height: 650px; margin-top:10px;">
+            <table class="table table-striped">
+                <thead style="position: sticky; top: 0; z-index: 1; padding: 8px; font-size: 20px; font-weight: bolder; text-align: center;">
+                <tr>
+                    <td style="background-color: #FE2E64; color: white;">Reader ID</td>
+                    <td style="background-color: #FE2E64; color: white;">Reader Name</td>
+                    <td style="background-color: #FE2E64; color: white;">Reader email</td>
+                    <td style="background-color: #FE2E64; color: white;">Book ID</td>
+                    <td style="background-color: #FE2E64; color: white;">Book Name</td>
+                    <td style="background-color: #FE2E64; color: white;">Issued Date</td>
+                    <td style="background-color: #FE2E64; color: white;">Due Date</td>
+                    <td style="background-color: #FE2E64; color: white;">Receive Status</td>
+                </tr>
+                </thead>
+                <tbody>
+                {% for details in issuedboookdetails%}
+                <tr>
+                    <td class="bodycell">{{details.reader_id}}</td>
+                    <td class="bodycell">{{details.reader_name}}</td>
+                    <td class="bodycell">{{details.reader_email}}</td>
+                    <td class="bodycell">{{details.bookid}}</td>
+                    <td class="bodycell">{{details.bookname}}</td>
+                    <td class="bodycell">{{details.issueddate}}</td>
+                    <td class="bodycell">{{details.due_date}}</td>
+                    <td class="bodycell">{{details.is_returned}}</td>
+                </tr>
+                {% endfor %}
+
+                {% if records.exists %}
+                {% for details in records %}
+                <tr>
+                    <td class="bodycell">{{details.reader_id}}</td>
+                    <td class="bodycell">{{details.reader_name}}</td>
+                    <td class="bodycell">{{details.reader_email}}</td>
+                    <td class="bodycell">{{details.bookid}}</td>
+                    <td class="bodycell">{{details.bookname}}</td>
+                    <td class="bodycell">{{details.issueddate}}</td>
+                    <td class="bodycell">{{details.due_date}}</td>
+                    <td class="bodycell">{{details.is_returned}}</td>
+                </tr>
+                {% endfor %}
+                {% else %}
+                {% if query %}
+                <tr>
+                    <td colspan="8">No records found for "{{ query }}".</td>
+                </tr>
+                {% endif %}
+                {% endif %}
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for message in messages %}
+            Swal.fire({
+                icon: '{% if message.tags == "success" %}success{% else %}error{% endif %}',
+                title: '{% if message.tags == "success" %}Success{% else %}Error{% endif %}',
+                text: '{{ message }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
+{% block scripts %}
+<script>
+    function fetchReaderInfo() {
+        const readerId = document.getElementById("readerid").value;
+        if (readerId) {
+            fetch(`/get_reader_info/?reader_id=${readerId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("readername").value = data.reader_name || '';
+                    document.getElementById("email").value = data.reader_email || '';
+                })
+                .catch(error => console.error('Error fetching reader info:', error));
+        } else {
+            document.getElementById("readername").value = '';
+            document.getElementById("email").value = '';
+        }
+    }
+
+    function fetchBookInfo() {
+        const bookId = document.getElementById("bookid").value;
+        if (bookId) {
+            fetch(`/get_book_info/?book_id=${bookId}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById("bookname").value = data.book_name || '';
+                    document.getElementById("author").value = data.author || '';
+                })
+                .catch(error => console.error('Error fetching book info:', error));
+        } else {
+            document.getElementById("bookname").value = '';
+            document.getElementById("author").value = '';
+        }
+    }
+</script>
+{% endblock %}
+{% endblock %}
