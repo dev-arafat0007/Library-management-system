@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+{% extends "index.html" %}
+
+{% block main_content %}
+<div style="display: flex; flex-direction: column; align-items: center; justify-contents: center; ">
+    <div class="container-fluid"
+     style="margin: 20px 0px;padding: 20px 100px;border: 2px solid red; background-color: antiquewhite; width: 90%;">
+    <form class="d-flex" role="search" style="height: 50px;">
+        <input class="form-control me-2" type="search" placeholder="Search  for Defaulter with Reader ID" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit"
+                style="width: 15%; background-color: #2E64FE; color: white; font-weight: bolder;">Search
+        </button>
+    </form>
+</div>
+<div style="overflow-y: auto; height: 650px; margin-top:10px; width: 90%;">
+    <table class="table table-striped" style="width: 100%;">
+    <thead style="position: sticky; top: 0; z-index: 1; padding: 8px; font-size: 20px; font-weight: bolder; text-align: center;">
+    <tr>
+        <td style="background-color: #FE2E64; color: white;">Reader ID</td>
+        <td style="background-color: #FE2E64; color: white;">Reader email</td>
+        <td style="background-color: #FE2E64; color: white;">Reader Name</td>
+        <td style="background-color: #FE2E64; color: white;">Book ID</td>
+        <td style="background-color: #FE2E64; color: white;">Book Name</td>
+        <td style="background-color: #FE2E64; color: white;">Author's Name</td>
+        <td style="background-color: #FE2E64; color: white;">Issued Date</td>
+        <td style="background-color: #FE2E64; color: white;">Due Date</td>
+        <td style="background-color: #FE2E64; color: white;">Return Status</td>
+    </tr>
+    </thead>
+    <tbody>
+    {% for defaulter in defaulters%}
+    <tr style="text-align: center">
+        <td class="bodycell">{{defaulter.reader_id}}</td>
+        <td class="bodycell">{{defaulter.reader_name}}</td>
+        <td class="bodycell">{{defaulter.reader_email}}</td>
+        <td class="bodycell">{{defaulter.bookid}}</td>
+        <td class="bodycell">{{defaulter.bookname}}</td>
+        <td class="bodycell">{{defaulter.author}}</td>
+        <td class="bodycell">{{defaulter.issueddate}}</td>
+        <td class="bodycell">{{defaulter.due_date}}</td>
+        <td class="bodycell">{{defaulter.is_returned}}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+</div>
+
+{% endblock %}
