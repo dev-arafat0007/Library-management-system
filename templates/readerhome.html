@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+{% extends "readerindex.html" %}
+
+{% block main_content %}
+
+<div class="text-center" style="width: 99%;">
+    <div class="row">
+        <div class="col">
+            <h3>TOTAL READERS</h3>
+            <h1 style="margin-top: 50px;">{{usercount}} <sub>Readers</sub></h1>
+        </div>
+        <div class="col">
+            <h3>TOTAL BOOKS</h3>
+            <h1 style="margin-top: 50px;">{{bookcount}} <sub>Books</sub></h1>
+        </div>
+        <div class="col">
+            <h3>TOTAL DEFAULTER</h3>
+            <h1 style="margin-top: 50px;">{{defaultercount}} <sub>Defaulters</sub></h1>
+        </div>
+    </div>
+</div>
+
+<div style="background-color: rgb(122, 204, 252); margin: auto; display: flex;height: 200px; width: 80%; margin-top: 80px;">
+    <div class="container-sm"
+         style="text-align: center;display: flex;justify-content: center;align-items: center;border-right: 10px solid rgb(255, 139, 139);">
+        <div>
+            <h2>DAFFODIL INTERNATIONAL UNIVERSITY LIBRARY</h2>
+            <h5>READ - LEARN - SHARE</h5>
+        </div>
+    </div>
+    <div class="container-sm"
+         style="display: flex;align-items: center;justify-content: center;width: 100%;">
+        <div class="container-fluid">
+            <form class="d-flex" role="search">
+                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                <button class="btn btn-outline-success" type="submit"
+                        style="background-color: palevioletred; color: white;border: none;">Search
+                </button>
+            </form>
+            <div style="text-align: center;font-size: 24px;margin-top: 10px;">
+                <h4>Advanced Search</h4>
+            </div>
+        </div>
+    </div>
+    <div class="container-sm"
+         style="text-align: center;display: flex;justify-content: center;align-items: center;border-left: 10px solid rgb(255, 139, 139);">
+        <div>
+            <h2>The Library is Open</h2>
+                <h4>Sat to Thu day: 08.10 AM to 7.50 PM<br>
+                Friday: 08.10 AM to 4.00 PM</h4>
+        </div>
+    </div>
+</div>
+
+<div
+        style="display: flex; align-items: center; justify-content: space-evenly; background-color: rgb(97, 147, 255); color: white; text-align: center; width: 100%; position: absolute; bottom: 0">
+    <div style="width: 30%;">
+        <h3>Quick Contacts</h3>
+        <h5>Tel. : +88022244418 (33-34)<br>
+            Circulation Desk (Ext.) : 65267</h5>
+    </div>
+    <div style="width: 30%;">
+        <h4>Head of The Library</h4>
+        <h5>librarian@daffodilvarsity.edu.bd<br>
+            Tel. : +88022244418 (33-34)<br>
+            Ext.: 65266</h5>
+    </div>
+    <div style="width: 30%;">
+        <h4>OpenAthens Remote Access</h4>
+        <h5>library2@daffodilvarsity.edu.bd<br>
+            Membership (Library & E-library)<br>
+            library12@daffodilvarsity.edu.bd</h5>
+    </div>
+</div>
+
+{% if messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for message in messages %}
+            Swal.fire({
+                icon: '{% if message.tags == "success" %}success{% else %}error{% endif %}',
+                title: '{% if message.tags == "success" %}Success{% else %}Error{% endif %}',
+                text: '{{ message }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
+
+{% endblock %}
