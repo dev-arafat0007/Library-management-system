@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+{% extends "readerindex.html" %}
+
+{% block main_content %}
+
+<div style="display: flex; flex-direction: column; align-items: center; justify-contents: center; gap: 20px;margin-top: 30px;">
+    <div class="container-fluid" style="width: 60%">
+        <form class="d-flex" role="search" method="GET" action="/readerbooks_list" style="height: 50px;">
+            <input class="form-control me-2" type="search" name="readersearch"
+                   placeholder="Search for Book With Book's ID"
+                   aria-label="Search">
+            <button class="btn btn-outline-success" type="submit"
+                    style="background-color: #0174DF; color: white; border: None; width: 15%;">Search
+            </button>
+        </form>
+    </div>
+    <div style="overflow-y: auto; height: 650px; margin-top:10px; width: 90%;">
+        <table class="table table-striped">
+            <thead style="position: sticky; top: 0; z-index: 1; padding: 8px; font-size: 20px; font-weight: bolder; text-align: center;">
+            <tr>
+                <td style="background-color: #FE2E64; color: white;">Book ID</td>
+                <td style="background-color: #FE2E64; color: white;">Book Name</td>
+                <td style="background-color: #FE2E64; color: white;">Book's Author</td>
+                <td style="background-color: #FE2E64; color: white;">Category</td>
+                <td style="background-color: #FE2E64; color: white;">Quantity</td>
+            </tr>
+            </thead>
+            <tbody>
+            {% for book in all_books %}
+            <tr style="text-align: center">
+                <td>{{book.bookid}}</td>
+                <td>{{book.bookname}}</td>
+                <td>{{book.author}}</td>
+                <td>{{book.category}}</td>
+                <td>{{book.quantity}}</td>
+            </tr>
+            {% endfor %}
+
+
+            {% if books.exists %}
+            {% for book in books %}
+            <tr style="text-align: center">
+                <td>{{book.bookid}}</td>
+                <td>{{book.bookname}}</td>
+                <td>{{book.author}}</td>
+                <td>{{book.category}}</td>
+                <td>{{book.quantity}}</td>
+            </tr>
+            {% endfor %}
+            {% else %}
+            {% if query %}
+            <tr>
+                <td colspan="5">No Books found for "{{ query }}".</td>
+            </tr>
+            {% endif %}
+            {% endif %}
+
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+{% if messages %}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        {% for message in messages %}
+            Swal.fire({
+                icon: '{% if message.tags == "success" %}success{% else %}error{% endif %}',
+                title: '{% if message.tags == "success" %}Success{% else %}Error{% endif %}',
+                text: '{{ message }}',
+                timer: 3000,
+                showConfirmButton: false
+            });
+        {% endfor %}
+    });
+</script>
+{% endif %}
+
+
+{% endblock %}
